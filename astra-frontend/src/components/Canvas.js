@@ -1,28 +1,32 @@
 import * as React from "react";
-import { ReactSketchCanvas } from "react-sketch-canvas";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import './styles.css'
 
 
 
-const Canvas = class extends React.Component {
+
+const Document = class extends React.Component {
   constructor(props) {
     super(props);
+    this.state={text:""}
+    this.handleChange = this.handleChange.bind(this)
+  }
 
-    this.canvas = React.createRef();
+  handleChange(value){
+    this.setState({text:value})
   }
 
   render() {
     return (
-      <div>
-        <ReactSketchCanvas
-          ref={this.canvas}
-          strokeWidth={5}
-          strokeColor="black"
-          height="1800"
-        />
+      <div className="container">
+        <ReactQuill value={this.state.text}
+        onChange={this.handleChange}
         
+        />
       </div>
     );
   }
 };
 
-export default Canvas;
+export default Document;

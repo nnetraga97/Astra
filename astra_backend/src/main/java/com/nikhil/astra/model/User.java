@@ -9,11 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name = "users")
@@ -24,8 +22,9 @@ public class User {
   private Long id;
   @Column(name = "username")
   private String userName;
-  @Column(name = "currentBoard")
-  private long currentBoard;
+  @Column(name = "password")
+  private String password;
+
   @Column(name = "boardList")
   private ArrayList<Long> boardList;
 
@@ -41,13 +40,7 @@ public class User {
       this.userName = userName;
   }
 
-  public long getCurrentBoard() {
-      return this.currentBoard;
-  }
 
-  public void setCurrentBoard(long currentBoard) {
-      this.currentBoard = currentBoard;
-  }
 
   public List<Long> getboardList() {
       return this.boardList;
@@ -62,17 +55,23 @@ public class User {
 @Override
 public String toString() {
   return String.format(
-      "User[id=%d, userName='%s', currentBoardId='%s']",
-      id, userName, currentBoard);
+      "User[id=%d, userName='%s']",
+      id, userName);
 }
 
 public Long getId() {
   return id;
 }
 
-public long getCurrentBoardId() {
-  return currentBoard;
+public String getPassword() {
+  return this.password;
 }
+
+public void setPassword(String password) {
+  this.password = password;
+}
+
+
 
 
 }
