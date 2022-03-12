@@ -20,36 +20,8 @@ public class DashBoardController {
 	private UserRepository userRepository;
 	@Autowired
 	private DashBoardRepository dashBoardRepository;
-    @MessageMapping("/board/{boardid}/{userId}")
-    @SendTo("board/{boardid}/")
-    public ResponseEntity<String> getData(@PathVariable long boardId,@PathVariable long userId){
-        try{
-            DashBoard currentBoard = dashBoardRepository.findById(boardId);
-            currentBoard.getActions().add("got data:"+boardId+" by user:"+userId);
-            dashBoardRepository.save(currentBoard);
-            return ResponseEntity.ok("data changed");
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return ResponseEntity.ok("data not changed");
-        }
-    }
 
-    @MessageMapping("/board/update/{boardId}/{data}/{userId}")
-    @SendTo("board/update/{boardid}/")
-    public ResponseEntity<String> getData(@PathVariable long boardId,@PathVariable String data,@PathVariable long userId){
-        try{
-            DashBoard currentBoard = dashBoardRepository.findById(boardId);
-            currentBoard.setData(data);
-            currentBoard.getActions().add("changed data to board:"+boardId+" by user:"+userId);
-            dashBoardRepository.save(currentBoard);
-            return ResponseEntity.ok(currentBoard.getData());
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            long boardid = boardId;
-            return ResponseEntity.ok("data not changed");
-        }
-    }
+   
+    
 
 }
