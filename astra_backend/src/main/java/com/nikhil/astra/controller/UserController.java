@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
+
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -68,8 +67,10 @@ public class UserController {
 
     }
 
-    @PostMapping("user/{userid}/{boardId}")
-    public ResponseEntity<String> deleteBoard(@PathVariable Long userId,@PathVariable Long boardId){
+    @PostMapping("board/{userIds}/{boardIds}")
+    public ResponseEntity<String> deleteBoard(@PathVariable String userIds,@PathVariable String boardIds){
+        Long userId = Long.parseLong(userIds);
+        Long boardId = Long.parseLong(boardIds);
         Optional<User> dbUser = userRepository.findById(userId);
         if(dbUser!=null){
             User currentUser = dbUser.get();
@@ -95,8 +96,9 @@ public class UserController {
        
     }
 
-    @PostMapping("user/createBoard/{username}/{boardname}")
-    public ResponseEntity<String> createDashBoard(@PathVariable long userid,@PathVariable String boardName){
+    @PostMapping("user/createBoard/{userids}/{boardName}")
+    public ResponseEntity<String> createDashBoard(@PathVariable String userids,@PathVariable String boardName){
+        Long userid = Long.parseLong(userids);
         Optional<User> cUser = userRepository.findById(userid);
         if(cUser!=null){
             User currentUser = cUser.get();
@@ -122,6 +124,59 @@ public class UserController {
         }
     }
 
+    @PostMapping("user/addBoard/{userids}/{boardids}")
+    public ResponseEntity<String> addDashBoard(@PathVariable String userids,@PathVariable String boardids){
+        Long userid = Long.parseLong(userids);
+        Long boardid = Long.parseLong(boardids);
+
+        try{
+            Optional<User> cUser = userRepository.findById(userid);
+            if(cUser!=null && cUser.get()!=null){
+                User currentUser = cUser.get();
+                if(currentUser.getboardList().contains(boardid))
+                    currentUser.getboardList().add(boardid);
+                else
+                    return ResponseEntity.ok("board is already in your list");
+                userRepository.save(currentUser);
+                return ResponseEntity.ok(boardids);
+            }
+            else{
+                return ResponseEntity.ok("unable to add");
+            }
+            
+        }
+
+        catch(Exception e){
+            return ResponseEntity.ok("unable to add");
+        }
+    }
+
+    @PostMapping("user/removeBoard/{userids}/{boardids}")
+    public ResponseEntity<String> removeDashBoard(@PathVariable String userids,@PathVariable String boardids){
+        Long userid = Long.parseLong(userids);
+        Long boardid = Long.parseLong(boardids);
+
+        try{
+            Optional<User> cUser = userRepository.findById(userid);
+            if(cUser!=null && cUser.get()!=null){
+                User currentUser = cUser.get();
+                if(currentUser.getboardList().contains(boardid))
+                    currentUser.getboardList().remove(boardid);
+                else
+                    return ResponseEntity.ok("how did you get this board id");
+                userRepository.save(currentUser);
+                return ResponseEntity.ok(boardids);
+            }
+            else{
+                return ResponseEntity.ok("unable to remove");
+            }
+            
+        }
+
+        catch(Exception e){
+            return ResponseEntity.ok("unable to remove");
+        }
+    }
 
 
 }
