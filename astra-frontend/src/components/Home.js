@@ -18,28 +18,28 @@ export default class Home extends PureComponent {
       createAndRoute(){
         console.log("Enteres create and route")
         document.getElementsByClassName('responseText').visible='true';
-       UserService.createUser(document.getElementsByClassName('uname').text,document.getElementsByClassName('pwd').text).then(
+       UserService.createUser(document.getElementsByClassName('uname').value,document.getElementsByClassName('pwd').value).then(
          (res) =>{
            if(res.data.includes('error') || res.data.includes('exists')){
-              document.getElementsByClassName('responseText').text = "Unable to create, check logs";
+              document.getElementsByClassName('responseText').value = "Unable to create, check logs";
               console.log("data from createUser"+res.data)
            }
            else{
-              document.getElementsByClassName('responseText').text = "User created with ID:"+res.data;
+              document.getElementsByClassName('responseText').value = "User created with ID:"+res.data;
               this.state.userid = res.data;
               this.state.username = (document.getElementsByClassName('uname').text);
               console.log("data from createUser"+res.data)
            }
          }
        )
-        UserService.createBoard(this.state.username,(document.getElementsByClassName('bname').text)).then(
+        UserService.createBoard(this.state.username,(document.getElementsByClassName('bname').value)).then(
           (res)=>{
             if(res.data.includes('no') || res.data.includes('to')){
-              document.getElementsByClassName('responseText').text = "Unable to create, check logs";
+              document.getElementsByClassName('responseText').value = "Unable to create, check logs";
               console.log("data from createBoard"+res.data)
            }
            else{
-              document.getElementsByClassName('responseText').text = "Board created with ID:"+res.data;
+              document.getElementsByClassName('responseText').value = "Board created with ID:"+res.data;
               this.state.boardid = res.data;
               console.log("data from createBoard"+res.data)
            }
