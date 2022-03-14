@@ -32,14 +32,18 @@ public class WSConfig {
             @Override
             public void onData(SocketIOClient client, Message message, AckRequest ackRequest) throws Exception {
                 try{
+                    System.out.print("update event received!!!");
+                    System.out.print("Message:["+message.getBoardid()+","+message.getUserid()+""+message.getData());
                     DashBoard currentBoard = dashBoardRepository.findById(Long.parseLong(message.getBoardid()));
                     if(currentBoard==null){
+                        System.out.print("no board found!!!");
                         server.getBroadcastOperations().sendEvent("send-board-data", "no board found");
                     }
                     else{
                         currentBoard.setData(message.getData());
                         dashBoardRepository.save(currentBoard);
                         server.getBroadcastOperations().sendEvent("send-board-data", "board updated in db");
+                        System.out.print("board updated");
                     }
                 }
                 catch(Exception e){
@@ -70,7 +74,7 @@ public class WSConfig {
             
         });
 
-        server.addConnectListener(client -> System.out.println(client.getSessionId()));
+        server.addConnectListener(client -> System.out.println(client.getSessionId()+" Connected!"));
 
         server.start();
 

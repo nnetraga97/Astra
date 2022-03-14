@@ -1,6 +1,8 @@
 import { AppBar, Toolbar, Typography, makeStyles, Button } from "@material-ui/core";
+import { formHelperTextClasses } from "@mui/material";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
+import Logoimg from "../resources/Astra-logos_white.png";
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -8,11 +10,18 @@ const useStyles = makeStyles(() => ({
     paddingRight: "19px",
     paddingLeft: "18px",
   },
-  logo: {
-    fontFamily: "Work Sans, sans-serif",
-    fontWeight: 500,
-    color: "#FFFEFE",
-    textAlign: "left",
+  logometrics:{
+    display:"flex",
+    height:200,
+    width:200,
+    zIndex:0
+  },
+  buttonmetrics:{
+    position:"fixed",
+    display:"flex",
+    paddingTop:"0px",
+    paddingLeft:"0px",
+    
   },
   menuButton: {
     fontFamily: "Open Sans, sans-serif",
@@ -22,6 +31,7 @@ const useStyles = makeStyles(() => ({
  },
  toolbar: {
     display: "flex",
+    flexDirection:"row",
     justifyContent: "space-between",
   },
 }));
@@ -35,10 +45,7 @@ const headersData = [
     label: "CreateBoard",
     href: "/board",
   },
-  {
-    label: "My Boards",
-    href: "/board",
-  },
+  
   {
     label: "My Account",
     href: "/account",
@@ -50,7 +57,7 @@ const headersData = [
 ];
 
 export default function Header() {
-  const { header, logo, menuButton,toolbar } = useStyles();
+  const { header,logometrics,buttonmetrics,menuButton,toolbar } = useStyles();
 
   const displayDesktop = () => {
     return <Toolbar className={toolbar}>
@@ -77,9 +84,11 @@ export default function Header() {
     });
   };
   const astraLogo = (
-    <Typography variant="h6" component="h1" className={logo}>
-      ASTRA
-    </Typography>
+    <div>
+        <Button to="/" className={buttonmetrics} component={RouterLink}>
+        <img src={Logoimg} className={logometrics} />
+        </Button>
+    </div>
   );
 
   return (

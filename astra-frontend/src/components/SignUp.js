@@ -11,27 +11,50 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { Link as RouterLink } from "react-router-dom";
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UserService from '../Services/UserService';
+import {Navigate} from 'react-router-dom';
 
 const theme = createTheme();
+
+const state = {
+  redirect:'false'
+}
 
 export default function SignUp() {
   const handleSubmit = (event) =>{
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const email=data.get('email');
+    const password= data.get('password');
+     const confirmpassowrd= data.get('passwordconfirm');
     console.log({
       email:data.get('email'),
-      passowrd: data.get('password'),
+      password: data.get('password'),
       confirmpassowrd: data.get('passwordconfirm')
     });
-
-    UserService.createUser(data.get('email'),data.get('password')).then((res)=>{
-        let data = res.data;
-        console.log(data);
-        console.log(res);
-    })
+    
+    if(password!==confirmpassowrd)
+      return;
+      else{
+      UserService.createUser(data.get('email'),data.get('password')).then((res)=>{
+          let rdata = res.data;
+          let data = String(rdata);
+          if(data.includes("error")){
+            console.log('error');
+          }
+          else if(data.includes("exists")){
+            console.log('user exists');
+          }
+          else{
+            console.log('created user');
+            console.log('data');
+            <Navigate to="/Home"/>
+          }
+      })
+    }
   }
 return (
   
@@ -100,22 +123,12 @@ return (
                       type="submit"
                       fullWidth
                       variant="contained"
-                      sx={{ mt: 3, mb: 2 }}
+                      
+                      sx={{ mt: 3, mb: 2}}
                     >
-                      Sign In
+                      Sign Up!
                     </Button>
-                    <Grid container>
-                      <Grid item xs>
-                        <Link href="#" variant="body2">
-                          Forgot Password?
-                        </Link>
-                      </Grid>
-                      <Grid item >
-                        <Link href="#" variant="body2">
-                          {"Don't have an account? Sign Up!"}
-                        </Link>
-                      </Grid>
-                    </Grid>
+                    
                   </Box>
                 </Box>
               </Container>

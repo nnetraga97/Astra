@@ -10,6 +10,7 @@ import App from './App';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import About from './components/About';
+import BoardService from './Services/BoardService';
 
 
 ReactDOM.render(
@@ -30,7 +31,8 @@ ReactDOM.render(
       </Route>
       <Route path="/Logout" element={<App/>}>
       </Route>
-      
+      <Route path="/board" element={<Dashboard/>}>
+      </Route>
       <Route path="/About" element={<About/>}>
       </Route>
       </Routes>
@@ -44,3 +46,5 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+BoardService();

@@ -1,32 +1,21 @@
-import * as React from "react";
+import React from 'react'
+import Background from "./Background";
+import Logo from './Logo';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import './styles.css'
 
+export default function About() {
+return (
+    
+    <div>
+        <div>
+            <div className="container">
+              <ReactQuill            
+              />
+            </div>
+        </div>
+        <Logo/>
+    </div>
+  );
+}
 
-
-
-const Dashboard = class extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state={text:""}
-    this.handleChange = this.handleChange.bind(this)
-  }
-
-  handleChange(value){
-    this.setState({text:value})
-  }
-
-  render() {
-    return (
-      <div className="container">
-        <ReactQuill value={this.state.text}
-        onChange={this.handleChange}
-        
-        />
-      </div>
-    );
-  }
-};
-
-export default Dashboard;

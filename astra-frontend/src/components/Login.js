@@ -14,10 +14,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UserService from '../Services/UserService';
+import { Link as RouterLink  } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function Login() {
+  let redirect = false;
   const handleSubmit = (event) =>{
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -26,16 +28,19 @@ export default function Login() {
       passowrd: data.get('password'),
     });
     UserService.getUserbyUsername(data.get('email')).then((res)=>{
-      let dbdata = res.data;
+      const dbdata = res.data;
       if(dbdata==null){
         return;
       }
       else{
         console.log(dbdata);
-        let dbemail = dbdata.get('userName');
-        let dbpwd = dbdata.get('password');
+        let dbemail = dbdata['userName'];
+        let dbpwd = dbdata['password'];
         if(dbpwd===data.get('password') && dbemail===data.get('email')){
           window.sessionStorage.setItem("userName", dbemail);
+          window.sessionStorage.setItem("userId",dbdata['id']);
+          redirect = true;
+          
         }
         else{
           console.log("Wrong password");
@@ -101,18 +106,18 @@ return (
                       type="submit"
                       fullWidth
                       variant="contained"
-                      sx={{ mt: 3, mb: 2 }}
+                      sx={{ mt: 3, mb: 2 ,to:'/Home'}}
                     >
                       Sign In
                     </Button>
                     <Grid container>
                       <Grid item xs>
-                        <Link href="#" variant="body2">
+                        <Link href="/SignUp" variant="body2">
                           Forgot Password?
                         </Link>
                       </Grid>
                       <Grid item >
-                        <Link href="#" variant="body2">
+                        <Link href="/Signup" variant="body2">
                           {"Don't have an account? Sign Up!"}
                         </Link>
                       </Grid>
