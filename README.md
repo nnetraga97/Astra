@@ -13,10 +13,15 @@ Any user with doc_id can share with another user and they will be able to add to
 Project Prerequisites -
 ---Backend---
 Java 11
+
 Java IDE with Home Variable(Recommend using one with built in Server support like Eclipse or VScode)
+
 Maven
+
 Spring JPA
+
 Spring Netty Java Socket.io Server for ws communication
+
 Tomcat Server for API(this server might not be necessary, but have not yet found a way to host rest on socket.io server)
 
 ---Frontend---
