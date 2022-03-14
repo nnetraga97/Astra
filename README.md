@@ -20,12 +20,17 @@ Spring Netty Java Socket.io Server for ws communication
 Tomcat Server for API(this server might not be necessary, but have not yet found a way to host rest on socket.io server)
 
 ---Frontend---
-React(DOM,router,hooks,state)\n
-Node.js\n
-Quill (React)\n
-Axios\n
-socket.io-client\n
-Material-UI\n
+React(DOM,router,hooks,state)
+
+Node.js
+
+Quill (React)
+
+Axios
+
+socket.io-client
+
+Material-UI
 
 The project currently has two apis smudged into one, A rest api used by the users to access
 data that does not require reat-time communications.
