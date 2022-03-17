@@ -1,22 +1,97 @@
-import { Box } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import { cardActionAreaClasses } from '@mui/material';
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState,useEffect } from 'react'
 import { useSpring,animated } from 'react-spring';
 import UserService from '../Services/UserService';
 import Background from "./Background";
 import Header from './Header';
 import Logo from './Logo';
+import {useNavigate} from 'react-router-dom';
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const[currentDocId,setcurrentDocId] = useState(null);
+  const[boardsList,setboardsList] = useState(null);
+  const[user,setUser] = useState();
+  const[userId,setUserId] = useState();
+  const[listUpdated,setlistUpdated] = useState(false);
+
+
+  useEffect(()=>{
+    setUser(window.sessionStorage.getItem('userName'));
+    setUserId(window.sessionStorage.getItem('userId'));
+    UserService.getUserbyUsername(window.sessionStorage.getItem('userName')).then((res)=>{
+      let data = res.data;
+      if(data==null){
+        return;
+      }
+      else{
+        setboardsList(data.boardList);
+        console.log(boardsList);
+      }
+    });
+  
+},[]);
+
+  useEffect(()=>{
+
+      UserService.getUserbyUsername(window.sessionStorage.getItem('userName')).then((res)=>{
+        let data = res.data;
+        if(data==null){
+          return;
+        }
+        else{
+          
+          if(listUpdated===true){
+          setboardsList(data.boardList);
+        }
+          console.log(boardsList);
+        }
+      });
+    
+  },[listUpdated]);
+
+  const createBoard = (event)=>{
+    event.preventDefault();
+   
+    UserService.createBoard(userId, "test").then((res)=>{
+      let data = String(res.data);
+      if(data===null){
+        return;
+      }
+      else{
+        if(data.includes("unable")){
+            console.log("unable to create");
+        }
+        else if(data.includes("no user")){
+          console.log("no user found");
+        }
+        else{
+            console.log(data);
+            setlistUpdated(true);
+        }
+      }
+    });
+  }
+
+  const openBoard=(event)=>{
+    event.preventDefault();
+    window.sessionStorage.setItem('currentBoard',"1");
+    navigate('/board');
+    }
+
 return (
     
     <div>
         <div>
           <div className='navbar'>
                     <Header/>
+                    
           </div>
             <Background/>
             <div className='containers'>
+              
             <Box 
             sx={{
               zIndex:3
@@ -29,6 +104,7 @@ return (
                     <div className="card-title">{card.title}</div>
                     <div className="card-body">{card.description}</div>
                     <Image ratio={card.imageRatio} src={card.image} />
+                    <Button sx={{ zIndex:3, color:'white'}} onClick={openBoard}>Open Board</Button>
                   </Card>
                 </div>
               ))}
@@ -37,7 +113,7 @@ return (
             </Box>
             </div>
         </div>
-        
+        <Button sx={{ zIndex:3, color:'white'}} onClick={createBoard}>Create Board</Button>
     </div>
   );
 }

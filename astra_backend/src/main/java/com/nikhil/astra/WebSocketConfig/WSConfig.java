@@ -1,16 +1,11 @@
 package com.nikhil.astra.WebSocketConfig;
 import com.corundumstudio.socketio.listener.*;
+
 import com.nikhil.astra.model.DashBoard;
 import com.nikhil.astra.repository.DashBoardRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import antlr.collections.List;
-
-import java.util.ArrayList;
-
-import javax.sql.ConnectionEvent;
-import javax.sql.ConnectionEventListener;
 
 import com.corundumstudio.socketio.*;
 public class WSConfig {
@@ -24,9 +19,11 @@ public class WSConfig {
         config.setPort(8083);
         config.setMaxFramePayloadLength(1024*1024);
         config.setMaxHttpContentLength(1024 * 1024);
+        
 
         final SocketIOServer server = new SocketIOServer(config);
-
+       
+        server.addNamespace("https://localhost:8083");
         server.addEventListener("update-board-data", Message.class, new DataListener<Message>() {
 
             @Override
@@ -74,10 +71,13 @@ public class WSConfig {
             
         });
 
-        server.addConnectListener(client -> System.out.println(client.getSessionId()+" Connected!"));
+        server.addConnectListener(client -> server.getBroadcastOperations().sendEvent("Hello-from-server", "bitch"));
 
         server.start();
-
+        for(SocketIONamespace nm : server.getAllNamespaces()){
+            System.out.println(nm.getName());
+        }
+        System.out.println(server.getAllClients());
 
     }
     

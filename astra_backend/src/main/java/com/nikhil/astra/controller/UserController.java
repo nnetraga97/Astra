@@ -100,6 +100,7 @@ public class UserController {
     @PostMapping("user/createBoard/{userids}/{boardName}")
     public ResponseEntity<String> createDashBoard(@PathVariable String userids,@PathVariable String boardName){
         Long userid = Long.parseLong(userids);
+        
         Optional<User> cUser = userRepository.findById(userid);
         if(cUser!=null){
             User currentUser = cUser.get();

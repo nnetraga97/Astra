@@ -14,12 +14,13 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UserService from '../Services/UserService';
-import { Link as RouterLink  } from "react-router-dom";
+import { Link as RouterLink , useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function Login() {
-  let redirect = false;
+  const navigate = useNavigate();
+  
   const handleSubmit = (event) =>{
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -39,7 +40,7 @@ export default function Login() {
         if(dbpwd===data.get('password') && dbemail===data.get('email')){
           window.sessionStorage.setItem("userName", dbemail);
           window.sessionStorage.setItem("userId",dbdata['id']);
-          redirect = true;
+          navigate('/home');
           
         }
         else{

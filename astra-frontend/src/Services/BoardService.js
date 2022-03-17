@@ -2,7 +2,7 @@ import {io} from 'socket.io-client'
 import Message from "./Message";
 
 
-export default function BoardService(){
+export default function BoardServices(){
 
 const socket=io("ws://localhost:8083")
 // send a message to the server
