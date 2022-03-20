@@ -1,12 +1,41 @@
 package com.nikhil.astra.WebSocketConfig;
+import java.time.LocalDateTime;
 
 public class Message {
 
-     private String boardid;
+    private String userId;
 
-    private String userid;
+    private String boardid;
 
     private String data;
+
+    private String create_dt;
+
+    public String getCreate_dt() {
+        return this.create_dt;
+    }
+
+    public void setCreate_dt(String create_dt) {
+        this.create_dt = create_dt;
+    }
+
+    public Message(){
+        this.create_dt = LocalDateTime.now().toString();
+    }
+
+    public Message(String userid, String boardid, String data){
+        this.boardid = boardid;
+        this.userId = userid;
+        this.data = data;
+        this.create_dt = LocalDateTime.now().toString();
+    }
+    public String getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getBoardid() {
         return this.boardid;
@@ -14,14 +43,6 @@ public class Message {
 
     public void setBoardid(String boardid) {
         this.boardid = boardid;
-    }
-
-    public String getUserid() {
-        return this.userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
     }
 
     public String getData() {
@@ -32,11 +53,5 @@ public class Message {
         this.data = data;
     }
 
-    public Message(String boardid,String userid,String data){
-        this.boardid = boardid;
-        this.userid = userid;
-        this.data = data;
-
-    }
     
 }

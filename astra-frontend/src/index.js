@@ -10,7 +10,6 @@ import App from './App';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import About from './components/About';
-import BoardService from './Services/BoardService';
 
 
 ReactDOM.render(
@@ -47,4 +46,4 @@ ReactDOM.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-BoardService();
+

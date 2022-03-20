@@ -1,7 +1,7 @@
 package com.nikhil.astra;
 
 
-import com.nikhil.astra.WebSocketConfig.WSConfig;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +19,7 @@ public class AstraApplication {
 	public static void main(String[] args) {
 		
 		SpringApplication.run(AstraApplication.class, args);
-		WSConfig startServer = new WSConfig();
-	}
-
-
-	@Bean
-	public void startSocketServer(){
-		
-
+	
 	}
 
 }

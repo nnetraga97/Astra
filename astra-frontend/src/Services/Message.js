@@ -6,10 +6,14 @@ class Message{
     
     data;
 
+	create_dt;
+
+
     Message(boardid,userid,data){
         this.boardid=boardid;
         this.userid=userid;
         this.data=data;
+		this.create_dt = Date.prototype.getTime();
     }
 	 getBoardid() {
 		return this.boardid;
