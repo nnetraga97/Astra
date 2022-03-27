@@ -58,14 +58,14 @@ public class MyHandler extends TextWebSocketHandler implements SubProtocolCapabl
         try{
             DashBoard currboard =  dashBoardRepository.findById(Long.parseLong(decodedMessage.getBoardid()));
             currboard.setData(decodedMessage.getData());
-            currboard.getActions().add("board updated by "+Long.parseLong(decodedMessage.getUserId()));
+            //currboard.getActions().add("board updated by "+Long.parseLong(decodedMessage.getUserId()));
             dashBoardRepository.save(currboard);
         }
         catch(Exception e){
             e.printStackTrace();
         }
         //logger.info("Server received: {}", request );
-        String response = String.format("response from server to '%s'",request);
+        String response = String.format(decodedMessage.getData());
         //logger.info("Server sends: {}", response);
         session.sendMessage(new TextMessage(response));
     }

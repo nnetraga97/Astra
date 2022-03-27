@@ -13,7 +13,10 @@ export default function DashBoard() {
   const currentBoard = window.sessionStorage.getItem('currentBoard');
   const userId = window.sessionStorage.getItem('userId');
 
-  var socket = null;
+  const [qdata,setQdata] = useState("");
+
+
+  const [socket,setSocket] = useState();
   useEffect(()=>{
     //Sockjs
     const sockJS = new SockJS('http://localhost:8080/websocket-sockjs',
@@ -27,16 +30,20 @@ export default function DashBoard() {
     
     sockJS.onmessage = function(m){
       console.log(m);
+      const resdata = m.data;
+      if(!resdata.includes("one-time")){
+        console.log(resdata);
+        setQdata(resdata);
+      }
     }
-    
-    socket = sockJS;
+    setSocket(sockJS);
     
   },[]);
 
  const handleChange = (event)=>{
    console.log(event);
    var tosend = new Message(userId,currentBoard,event);
-
+ 
    socket.send(JSON.stringify({userId:userId,
     boardid:currentBoard,
     data:event,
@@ -48,7 +55,8 @@ return (
     <div>
         <div>
             <div className="container">
-              <ReactQuill onChange={handleChange}            
+              <ReactQuill onChange={handleChange}    
+              value={qdata} 
               />
             </div>
         </div>

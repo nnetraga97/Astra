@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -26,7 +28,8 @@ public class User {
   private String password;
 
   @Column(name = "boardList")
-  private ArrayList<Long> boardList;
+  @ManyToMany
+  private List<DashBoard> boardList;
 
   protected User() {}
   public User(String userName) {
@@ -42,11 +45,11 @@ public class User {
 
 
 
-  public List<Long> getboardList() {
+  public List<DashBoard> getboardList() {
       return this.boardList;
   }
 
-  public void setboardList(ArrayList<Long> boardList) {
+  public void setboardList(ArrayList<DashBoard> boardList) {
       this.boardList = boardList;
   }
 

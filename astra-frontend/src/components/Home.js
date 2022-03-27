@@ -8,11 +8,14 @@ import Header from './Header';
 import Logo from './Logo';
 import {useNavigate} from 'react-router-dom';
 
+
+
+
 export default function Home() {
-  const navigate = useNavigate();
+  
 
   const[currentDocId,setcurrentDocId] = useState(null);
-  const[boardsList,setboardsList] = useState(null);
+  const[boardsList,setboardsList] = useState(cards);
   const[user,setUser] = useState();
   const[userId,setUserId] = useState();
   const[listUpdated,setlistUpdated] = useState(false);
@@ -46,6 +49,7 @@ export default function Home() {
           if(listUpdated===true){
           setboardsList(data.boardList);
         }
+          console.log(data);
           console.log(boardsList);
         }
       });
@@ -74,13 +78,13 @@ export default function Home() {
       }
     });
   }
-
+  const navigate = useNavigate();
   const openBoard=(event)=>{
-    event.preventDefault();
-    window.sessionStorage.setItem('currentBoard',"1");
+    console.log(event);
+    window.sessionStorage.setItem('currentBoard',3);
     navigate('/board');
     }
-
+ 
 return (
     
     <div>
@@ -98,11 +102,12 @@ return (
             }}
             >
             <div className="row">
-              {cards.map((card, i) => (
+              {boardsList.map((card, i) => (
                 <div className="column">
                   <Card>
-                    <div className="card-title">{card.title}</div>
-                    <div className="card-body">{card.description}</div>
+                    <div className="card-title">{card.name}</div>
+                    <div className="card-id">{card.id}</div>
+                    <div className="card-body">{card.data}</div>
                     <Image ratio={card.imageRatio} src={card.image} />
                     <Button sx={{ zIndex:3, color:'white'}} onClick={openBoard}>Open Board</Button>
                   </Card>
@@ -121,7 +126,11 @@ return (
 
 function Card({children}){
 
+ 
+
   const ref = useRef();
+
+  
 
   const[isHovered,setHovered] = useState(false);
 
@@ -140,9 +149,7 @@ function Card({children}){
       ref={ref}
       className="card"
       onMouseEnter={()=>setHovered(false)}
-      onClick={()=>{
-        //redirect to board based on id
-      }}
+      
       onMouseMove={({clientX,clientY})=>{
 
         const x = 

@@ -14,7 +14,6 @@ public interface DashBoardRepository extends JpaRepository<DashBoard,Long>{
 
     DashBoard findById(long id);
     
-    DashBoard findBycreatedUserId(long createdUserId);
-   
+    
     
 }

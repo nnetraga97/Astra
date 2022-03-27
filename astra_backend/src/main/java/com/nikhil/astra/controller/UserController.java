@@ -51,7 +51,7 @@ public class UserController {
         
         if(userRepository.findByUserName(username)==null){
             User newUser = new User(username);
-            newUser.setboardList(new ArrayList<Long>());
+            newUser.setboardList(new ArrayList<DashBoard>());
             newUser.setPassword(password);
             try{
                 userRepository.save(newUser);
@@ -75,25 +75,32 @@ public class UserController {
         Optional<User> dbUser = userRepository.findById(userId);
         if(dbUser!=null){
             User currentUser = dbUser.get();
-            List<Long> boardList = currentUser.getboardList();
-            if(boardList.contains(boardId)){
-                boardList.remove(boardId);
-                try{
-                    dashBoardRepository.delete(dashBoardRepository.getById(boardId));
-                    userRepository.save(currentUser);
-                    return ResponseEntity.ok(Long.toString(boardId));
+            List<DashBoard> boardList = currentUser.getboardList();
+
+            for(DashBoard userBoard : boardList){
+                if(userBoard.getId()==boardId){
+                    currentUser.getboardList().remove(userBoard);
+                    try{
+                        dashBoardRepository.delete(userBoard);
+                        userRepository.save(currentUser);
+                        return ResponseEntity.ok(Long.toString(currentUser.getId()));
+                    }
+                    catch(Exception e){
+                        return ResponseEntity.ok("unable to delete board");
+                    }
+                    
                 }
-                catch(Exception e){
-                    return ResponseEntity.ok("unable to delete board");
-                }
+              
             }
-            else{
+
                 return ResponseEntity.ok("not found given board id");
-            }
+       
+
         }
         else{
             return ResponseEntity.ok("unable to delete board");
         }
+ 
        
     }
 
@@ -105,14 +112,14 @@ public class UserController {
         if(cUser!=null){
             User currentUser = cUser.get();
             try{
-                DashBoard newboard = new DashBoard(currentUser.getId());
+                DashBoard newboard = new DashBoard(currentUser);
                 newboard.setData("");
                 newboard.setActions(new ArrayList<String>());
                 newboard.getActions().add("board:"+newboard.getId()+" created by user:"+currentUser.getUserName()+
                 " with id:"+currentUser.getId());
                 newboard.setName(boardName);
                 dashBoardRepository.save(newboard);
-                currentUser.getboardList().add(newboard.getId());
+                currentUser.getboardList().add(newboard);
                 userRepository.save(currentUser);
                 return ResponseEntity.ok(Long.toString(newboard.getId()));
             }
@@ -132,19 +139,24 @@ public class UserController {
         Long boardid = Long.parseLong(boardids);
 
         try{
-            Optional<User> cUser = userRepository.findById(userid);
-            if(cUser!=null && cUser.get()!=null){
-                User currentUser = cUser.get();
-                if(!currentUser.getboardList().contains(boardid))
-                    currentUser.getboardList().add(boardid);
-                else
-                    return ResponseEntity.ok("board is already in your list");
-                userRepository.save(currentUser);
-                return ResponseEntity.ok(boardids);
+           Optional<User> dbUser = userRepository.findById(userid);
+           if(dbUser!=null){
+               User currentUser = dbUser.get();
+               Optional<DashBoard> boardtoAdd = dashBoardRepository.findById(boardid);
+               if(boardtoAdd!=null){
+                   currentUser.getboardList().add(boardtoAdd.get());
+                   boardtoAdd.get().getActions().add("Added to user "+currentUser.getId()+" list");
+                   dashBoardRepository.save(boardtoAdd.get());
+                   userRepository.save(currentUser);
+                   return ResponseEntity.ok("board added");
+               }
+               else{
+                return ResponseEntity.ok("board does not exist");
+               }
             }
             else{
-                return ResponseEntity.ok("unable to add");
-            }
+                return ResponseEntity.ok("user does not exist");
+            } 
             
         }
 
@@ -159,25 +171,30 @@ public class UserController {
         Long boardid = Long.parseLong(boardids);
 
         try{
-            Optional<User> cUser = userRepository.findById(userid);
-            if(cUser!=null && cUser.get()!=null){
-                User currentUser = cUser.get();
-                if(currentUser.getboardList().contains(boardid))
-                    currentUser.getboardList().remove(boardid);
-                else
-                    return ResponseEntity.ok("how did you get this board id");
-                userRepository.save(currentUser);
-                return ResponseEntity.ok(boardids);
-            }
-            else{
-                return ResponseEntity.ok("unable to remove");
-            }
-            
-        }
-
-        catch(Exception e){
-            return ResponseEntity.ok("unable to remove");
-        }
+            Optional<User> dbUser = userRepository.findById(userid);
+            if(dbUser!=null){
+                User currentUser = dbUser.get();
+                DashBoard boardtoAdd = dashBoardRepository.getById(boardid);
+                if(boardtoAdd!=null){
+                    currentUser.getboardList().remove(boardtoAdd);
+                    boardtoAdd.getActions().add("removed from user "+currentUser.getId()+" list");
+                    dashBoardRepository.save(boardtoAdd);
+                    userRepository.save(currentUser);
+                    return ResponseEntity.ok("board removed");
+                }
+                else{
+                 return ResponseEntity.ok("board does not exist");
+                }
+             }
+             else{
+                 return ResponseEntity.ok("user does not exist");
+             } 
+             
+         }
+ 
+         catch(Exception e){
+             return ResponseEntity.ok("unable to remove");
+         }
     }
 
 
