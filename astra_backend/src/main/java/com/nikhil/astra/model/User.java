@@ -34,6 +34,7 @@ public class User {
   protected User() {}
   public User(String userName) {
     this.userName = userName;
+  
 }
   public String getUserName() {
       return this.userName;
@@ -42,7 +43,6 @@ public class User {
   public void setUserName(String userName) {
       this.userName = userName;
   }
-
 
 
   public List<DashBoard> getboardList() {
@@ -73,7 +73,6 @@ public String getPassword() {
 public void setPassword(String password) {
   this.password = password;
 }
-
 
 
 

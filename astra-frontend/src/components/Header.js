@@ -1,9 +1,12 @@
-import { AppBar, Toolbar, Typography, makeStyles, Button } from "@material-ui/core";
+import 'react-devtools';
+import { AppBar, Toolbar, Typography, makeStyles, Button, Paper } from "@material-ui/core";
 import { formHelperTextClasses } from "@mui/material";
-import React from "react";
+import React, { useRef, useState,useEffect } from 'react'
 import { Link as RouterLink } from "react-router-dom";
 import Logoimg from "../resources/Astra-logos_white.png";
-
+import UserService from "../Services/UserService";
+import CreateBoardPopUp from "./CreateBoardPopUp";
+import PropTypes from 'prop-types';
 const useStyles = makeStyles(() => ({
   header: {
     backgroundColor: "#400CCC",
@@ -12,8 +15,8 @@ const useStyles = makeStyles(() => ({
   },
   logometrics:{
     display:"flex",
-    height:200,
-    width:200,
+    height:65,
+    width:100,
     zIndex:0
   },
   buttonmetrics:{
@@ -21,6 +24,7 @@ const useStyles = makeStyles(() => ({
     display:"flex",
     paddingTop:"0px",
     paddingLeft:"0px",
+    
     
   },
   menuButton: {
@@ -36,60 +40,90 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const headersData = [
-  {
-    label: "Home",
-    href: "/",
-  },
-  {
-    label: "CreateBoard",
-    href: "/board",
-  },
-  
-  {
-    label: "My Account",
-    href: "/account",
-  },
-  {
-    label: "Log Out",
-    href: "/logout",
-  },
-];
+CreateBoardPopUp.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  selectedValue: PropTypes.string.isRequired,
+};
 
 export default function Header() {
+
   const { header,logometrics,buttonmetrics,menuButton,toolbar } = useStyles();
 
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState();
+
+  const handleClickOpen = () => {
+    setOpen(true);
+    console.log(open);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
   const displayDesktop = () => {
     return <Toolbar className={toolbar}>
-      {astraLogo}
+     
+        
       <div>
-      {getMenuButtons()}</div>
-    </Toolbar>;
-  };
-  const getMenuButtons = () => {
-    return headersData.map(({ label, href }) => {
-      return (
-        <Button
+      
+      
+      <CreateBoardPopUp
+        selectedValue={selectedValue}
+        open={open}
+        onClose={handleClose}
+      />
+
+      <Button
           {...{
-            key: label,
+            key: "logo",
+            to: "/",
+            component: RouterLink,
+            className: menuButton,
+          }}
+        >
+          <img src={Logoimg} className={logometrics} />
+        </Button>
+      <Button
+          {...{
+            key: "home",
             color: "inherit",
-            to: href,
+            to: "/",
             component: RouterLink,
             className: menuButton
           }}
         >
-          {label}
+        Home
         </Button>
-      );
-    });
+        <Button
+          {...{
+            key: "CreateBoard",
+            color: "inherit",
+            className: menuButton,
+            onClick:handleClickOpen
+          }}
+        >
+          Create Board
+        </Button>
+        
+        <Button
+          {...{
+            key:"Log Out",
+            color: "inherit",
+            to: "/logout",
+            component: RouterLink,
+            className: menuButton
+          }}
+        >
+          Log Out
+        </Button>
+    
+      
+      </div>
+    </Toolbar>;
   };
-  const astraLogo = (
-    <div>
-        <Button to="/" className={buttonmetrics} component={RouterLink}>
-        <img src={Logoimg} className={logometrics} />
-        </Button>
-    </div>
-  );
+ 
 
   return (
     <header>

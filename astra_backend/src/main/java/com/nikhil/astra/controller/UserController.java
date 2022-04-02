@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.nikhil.astra.constants.DashBoardConstants;
 import com.nikhil.astra.model.DashBoard;
+import com.nikhil.astra.model.DashBoardTransactionHistory;
 import com.nikhil.astra.model.User;
 import com.nikhil.astra.repository.DashBoardRepository;
+import com.nikhil.astra.repository.DashBoardTransactionHistoryRepository;
 import com.nikhil.astra.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class UserController {
 	private UserRepository userRepository;
 	@Autowired
 	private DashBoardRepository dashBoardRepository;
+
+    @Autowired
+	private DashBoardTransactionHistoryRepository dashboardTranRepository;
 
     @GetMapping("/users")
 	public ResponseEntity<List<User>> getAllUsers(){
@@ -83,6 +89,8 @@ public class UserController {
                     try{
                         dashBoardRepository.delete(userBoard);
                         userRepository.save(currentUser);
+                        DashBoardTransactionHistory deleteTransaction = new DashBoardTransactionHistory(currentUser, DashBoardConstants.DELETE_BOARD, userBoard);
+                        dashboardTranRepository.save(deleteTransaction);
                         return ResponseEntity.ok(Long.toString(currentUser.getId()));
                     }
                     catch(Exception e){
@@ -113,14 +121,13 @@ public class UserController {
             User currentUser = cUser.get();
             try{
                 DashBoard newboard = new DashBoard(currentUser);
-                newboard.setData("");
-                newboard.setActions(new ArrayList<String>());
-                newboard.getActions().add("board:"+newboard.getId()+" created by user:"+currentUser.getUserName()+
-                " with id:"+currentUser.getId());
+                newboard.setData("");              
                 newboard.setName(boardName);
                 dashBoardRepository.save(newboard);
                 currentUser.getboardList().add(newboard);
                 userRepository.save(currentUser);
+                DashBoardTransactionHistory updateTransaction = new DashBoardTransactionHistory(currentUser, DashBoardConstants.CREATE_BOARD, newboard);
+                dashboardTranRepository.save(updateTransaction);
                 return ResponseEntity.ok(Long.toString(newboard.getId()));
             }
             catch(Exception e){
@@ -144,10 +151,11 @@ public class UserController {
                User currentUser = dbUser.get();
                Optional<DashBoard> boardtoAdd = dashBoardRepository.findById(boardid);
                if(boardtoAdd!=null){
-                   currentUser.getboardList().add(boardtoAdd.get());
-                   boardtoAdd.get().getActions().add("Added to user "+currentUser.getId()+" list");
+                   currentUser.getboardList().add(boardtoAdd.get());                 
                    dashBoardRepository.save(boardtoAdd.get());
                    userRepository.save(currentUser);
+                   DashBoardTransactionHistory addTransaction = new DashBoardTransactionHistory(currentUser, DashBoardConstants.ADD_USER, boardtoAdd.get());
+                   dashboardTranRepository.save(addTransaction);
                    return ResponseEntity.ok("board added");
                }
                else{
@@ -177,9 +185,13 @@ public class UserController {
                 DashBoard boardtoAdd = dashBoardRepository.getById(boardid);
                 if(boardtoAdd!=null){
                     currentUser.getboardList().remove(boardtoAdd);
-                    boardtoAdd.getActions().add("removed from user "+currentUser.getId()+" list");
+
+                    //boardtoAdd.getActions().add("removed from user "+currentUser.getId()+" list");
+
                     dashBoardRepository.save(boardtoAdd);
                     userRepository.save(currentUser);
+                    DashBoardTransactionHistory removeTransaction = new DashBoardTransactionHistory(currentUser, DashBoardConstants.REMOVE_USER,boardtoAdd);
+                   dashboardTranRepository.save(removeTransaction);
                     return ResponseEntity.ok("board removed");
                 }
                 else{

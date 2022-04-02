@@ -19,6 +19,7 @@ export default function Home() {
   const[user,setUser] = useState();
   const[userId,setUserId] = useState();
   const[listUpdated,setlistUpdated] = useState(false);
+  
 
 
   useEffect(()=>{
@@ -56,28 +57,7 @@ export default function Home() {
     
   },[listUpdated]);
 
-  const createBoard = (event)=>{
-    event.preventDefault();
-   
-    UserService.createBoard(userId, "test").then((res)=>{
-      let data = String(res.data);
-      if(data===null){
-        return;
-      }
-      else{
-        if(data.includes("unable")){
-            console.log("unable to create");
-        }
-        else if(data.includes("no user")){
-          console.log("no user found");
-        }
-        else{
-            console.log(data);
-            setlistUpdated(true);
-        }
-      }
-    });
-  }
+
   const navigate = useNavigate();
   const openBoard=(event)=>{
     console.log(event);
@@ -89,13 +69,12 @@ return (
     
     <div>
         <div>
-          <div className='navbar'>
-                    <Header/>
-                    
-          </div>
-            <Background/>
+         
+            <Background/> 
             <div className='containers'>
-              
+            <div className='navbar'>
+                    <Header/>       
+          </div>
             <Box 
             sx={{
               zIndex:3
@@ -118,7 +97,7 @@ return (
             </Box>
             </div>
         </div>
-        <Button sx={{ zIndex:3, color:'white'}} onClick={createBoard}>Create Board</Button>
+       
     </div>
   );
 }

@@ -1,9 +1,9 @@
 package com.nikhil.astra.model;
 
-import java.awt.image.BufferedImage;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -18,12 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+
 
 @Entity
 @Table(name = "dashboards")
@@ -39,21 +34,23 @@ public class DashBoard {
     
     @ManyToMany
     private List<User> userList;
+
+    @OneToMany(mappedBy = "board")
+    private List<DashBoardTransactionHistory> transaction_details;
+
+    
    
     @Column(name = "dTofCreation")
     private LocalDateTime dTofCreation;
-    @Column(name = "actions")
-    private ArrayList<String> actions;
-
-    @Column(name = "code")
-    @GeneratedValue
-    private UUID codeString;
 
     public DashBoard(User createdUser) {
         this.userList = new ArrayList<>();
         userList.add(createdUser);
         dTofCreation =  LocalDateTime.now();
-        actions = new ArrayList<>();    
+        this.transaction_details = new ArrayList<>();
+
+        transaction_details.add(new DashBoardTransactionHistory(createdUser));
+    
     }
 
     protected DashBoard() {
@@ -84,10 +81,6 @@ public class DashBoard {
         this.data = data;
     }
 
-   
-    public List<String> getActions() {
-        return this.actions;
-    }
 
     public String getName() {
         return this.name;
@@ -97,8 +90,13 @@ public class DashBoard {
         this.name = name;
     }
 
-    public void setActions(ArrayList<String> actions) {
-        this.actions = actions;
+    public List<DashBoardTransactionHistory> getTransaction_details() {
+        return this.transaction_details;
     }
+
+    public void setTransaction_details(List<DashBoardTransactionHistory> transaction_details) {
+        this.transaction_details = transaction_details;
+    }
+
 
 }

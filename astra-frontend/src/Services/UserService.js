@@ -16,8 +16,8 @@ class UserService {
         return axios.post(ORDER_API_BASE_URL + 'board/' + userId+"/"+boardid);
     }
 
-    createBoard(userId,boardid){
-        return axios.post(ORDER_API_BASE_URL + 'user/createBoard/' + userId+"/"+boardid);
+    createBoard(userId,boardName){
+        return axios.post(ORDER_API_BASE_URL + 'user/createBoard/' + userId+"/"+boardName);
     }
 
     addBoard(userId,boardid){
