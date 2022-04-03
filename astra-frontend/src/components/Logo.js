@@ -8,8 +8,8 @@ const useStyles = makeStyles(() => ({
     logometrics:{
       position:"fixed",
       display:"flex",
-      height:200,
-      width:200,
+      height:130,
+      width:155,
       zIndex:1
    },
    buttonmetrics:{

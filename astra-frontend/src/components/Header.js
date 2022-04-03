@@ -1,4 +1,4 @@
-import 'react-devtools';
+
 import { AppBar, Toolbar, Typography, makeStyles, Button, Paper } from "@material-ui/core";
 import { formHelperTextClasses } from "@mui/material";
 import React, { useRef, useState,useEffect } from 'react'
@@ -46,19 +46,20 @@ CreateBoardPopUp.propTypes = {
   selectedValue: PropTypes.string.isRequired,
 };
 
-export default function Header() {
+export default function Header(props) {
 
-  const { header,logometrics,buttonmetrics,menuButton,toolbar } = useStyles();
+  const { header,logometrics,buttonmetrics,menuButton,toolbar} = useStyles();
 
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState();
+  const [selectedValue, setSelectedValue] = useState("Default String");
+  const {listUpdated,setlistUpdated} = props;
 
   const handleClickOpen = () => {
     setOpen(true);
-    console.log(open);
   };
 
   const handleClose = (value) => {
+    
     setOpen(false);
     setSelectedValue(value);
   };
@@ -73,6 +74,7 @@ export default function Header() {
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
+        listUpdated = {listUpdated}
       />
 
       <Button

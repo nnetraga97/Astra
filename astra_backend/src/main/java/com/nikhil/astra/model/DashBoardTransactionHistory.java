@@ -51,9 +51,9 @@ public class DashBoardTransactionHistory {
 
     }
 
-    public DashBoardTransactionHistory(User updateUser, String transString, DashBoard board) {
+    public DashBoardTransactionHistory(String updadeString, String transString, DashBoard board) {
         dTofCreation = LocalDateTime.now();
-       this.update_User = updateUser.getId();
+       this.update_User = Long.parseLong(updadeString);
        this.transaction_cd = transString;
        this.transaction_txt = computeTransactionText(transString);
        this.board = board.getId();

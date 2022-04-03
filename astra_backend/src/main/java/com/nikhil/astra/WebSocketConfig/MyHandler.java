@@ -11,8 +11,11 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.google.gson.Gson;
+import com.nikhil.astra.constants.DashBoardConstants;
 import com.nikhil.astra.model.DashBoard;
+import com.nikhil.astra.model.DashBoardTransactionHistory;
 import com.nikhil.astra.repository.DashBoardRepository;
+import com.nikhil.astra.repository.DashBoardTransactionHistoryRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,9 @@ public class MyHandler extends TextWebSocketHandler implements SubProtocolCapabl
     private static final Logger logger = LoggerFactory.getLogger(MyHandler.class);
     @Autowired
 	private DashBoardRepository dashBoardRepository;
+
+    @Autowired
+	private DashBoardTransactionHistoryRepository dashboardTranRepository;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.info("Server connection opened");
@@ -52,19 +58,27 @@ public class MyHandler extends TextWebSocketHandler implements SubProtocolCapabl
     }
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    	
         String request = message.getPayload();
+        
+        
+        	logger.info("Server received: {}", request );
+        
         InputParser parser = new InputParser(request);
-        Message decodedMessage = parser.parseInput();
+        Message decodedMessage = null;
         try{
-            DashBoard currboard =  dashBoardRepository.findById(Long.parseLong(decodedMessage.getBoardid()));
+        	decodedMessage= parser.parseInput();
+            DashBoard currboard =  dashBoardRepository.findById(Long.parseLong(decodedMessage.getBoardid()));         
             currboard.setData(decodedMessage.getData());
-            //currboard.getActions().add("board updated by "+Long.parseLong(decodedMessage.getUserId()));
+            
+            DashBoardTransactionHistory updateTransaction = new DashBoardTransactionHistory(decodedMessage.getUserId(), DashBoardConstants.UPDATE_BOARD, currboard);
+            dashboardTranRepository.save(updateTransaction);
             dashBoardRepository.save(currboard);
         }
         catch(Exception e){
-            e.printStackTrace();
+          
         }
-        //logger.info("Server received: {}", request );
+        logger.info("Server received: {}", request );
         String response = String.format(decodedMessage.getData());
         //logger.info("Server sends: {}", response);
         session.sendMessage(new TextMessage(response));
@@ -77,4 +91,5 @@ public class MyHandler extends TextWebSocketHandler implements SubProtocolCapabl
     public List<String> getSubProtocols() {
         return Collections.singletonList("*");
     }
+   
  }

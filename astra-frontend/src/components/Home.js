@@ -62,7 +62,7 @@ export default function Home() {
   const openBoard=(event)=>{
     console.log(event);
     window.sessionStorage.setItem('currentBoard',3);
-    navigate('/board');
+    
     }
  
 return (
@@ -73,7 +73,7 @@ return (
             <Background/> 
             <div className='containers'>
             <div className='navbar'>
-                    <Header/>       
+                    <Header listUpdated={listUpdated} setlistUpdated={setlistUpdated} />       
           </div>
             <Box 
             sx={{
@@ -88,7 +88,10 @@ return (
                     <div className="card-id">{card.id}</div>
                     <div className="card-body">{card.data}</div>
                     <Image ratio={card.imageRatio} src={card.image} />
-                    <Button sx={{ zIndex:3, color:'white'}} onClick={openBoard}>Open Board</Button>
+                    <Button sx={{ zIndex:3, color:'white'}} onClick={()=>{
+                      (window.sessionStorage.setItem("currentBoard",card.id));
+                      navigate('/board');                     
+                      }}>Open Board</Button>
                   </Card>
                 </div>
               ))}

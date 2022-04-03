@@ -7,13 +7,15 @@ import UserService from '../Services/UserService';
 
 import Message from '../Services/Message';
 import SockJS from 'sockjs-client'; 
-import {Client, Message as IMessage,StompJs} from '@stomp/stompjs';
-
+import {Client, Message as IMessage,Stomp} from '@stomp/stompjs';
 export default function DashBoard() {
   const currentBoard = window.sessionStorage.getItem('currentBoard');
   const userId = window.sessionStorage.getItem('userId');
-
+  
   const [qdata,setQdata] = useState("");
+  const [dataupdated,setdataUpdated ]= useState(false);
+
+
 
 
   const [socket,setSocket] = useState();
@@ -23,9 +25,7 @@ export default function DashBoard() {
     '*', {debug: true, transports: [],reconnectDelay:1500});
 
     sockJS.onopen = function(){
-      console.log("client connected");
-      console.log('Subprotocol: ' + sockJS.protocol);
-      console.log('Extensions: ' + sockJS.extensions);
+      console.log("SockJS client opened");
     }
     
     sockJS.onmessage = function(m){
@@ -33,29 +33,40 @@ export default function DashBoard() {
       const resdata = m.data;
       if(!resdata.includes("one-time")){
         console.log(resdata);
-        setQdata(resdata);
+        
+        
       }
     }
-    setSocket(sockJS);
+
+   
     
+    setSocket(sockJS);
+    var stompClient = Stomp.over(sockJS);
+    stompClient.connect({},function(frame){
+      console.log("Stomp connected");
+    })
   },[]);
 
- const handleChange = (event)=>{
-   console.log(event);
-   var tosend = new Message(userId,currentBoard,event);
- 
+  useEffect(()=>{},[dataupdated]);
+
+ const handleChange = (data)=>{
+   console.log(data);
+
+
+     var tosend = new Message(userId,currentBoard,data);
+     
    socket.send(JSON.stringify({userId:userId,
     boardid:currentBoard,
-    data:event,
+    data:data,
     create_dt:Date.now}));
-  //socket.send(tosend);
- };
+  socket.send(tosend);
+  };
 return (
     
     <div>
         <div>
             <div className="container">
-              <ReactQuill onChange={handleChange}    
+              <ReactQuill onChange={handleChange} 
               value={qdata} 
               />
             </div>

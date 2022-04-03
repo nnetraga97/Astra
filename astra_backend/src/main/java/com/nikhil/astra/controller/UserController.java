@@ -89,7 +89,7 @@ public class UserController {
                     try{
                         dashBoardRepository.delete(userBoard);
                         userRepository.save(currentUser);
-                        DashBoardTransactionHistory deleteTransaction = new DashBoardTransactionHistory(currentUser, DashBoardConstants.DELETE_BOARD, userBoard);
+                        DashBoardTransactionHistory deleteTransaction = new DashBoardTransactionHistory(userIds, DashBoardConstants.DELETE_BOARD, userBoard);
                         dashboardTranRepository.save(deleteTransaction);
                         return ResponseEntity.ok(Long.toString(currentUser.getId()));
                     }
@@ -126,7 +126,7 @@ public class UserController {
                 dashBoardRepository.save(newboard);
                 currentUser.getboardList().add(newboard);
                 userRepository.save(currentUser);
-                DashBoardTransactionHistory updateTransaction = new DashBoardTransactionHistory(currentUser, DashBoardConstants.CREATE_BOARD, newboard);
+                DashBoardTransactionHistory updateTransaction = new DashBoardTransactionHistory(userids, DashBoardConstants.CREATE_BOARD, newboard);
                 dashboardTranRepository.save(updateTransaction);
                 return ResponseEntity.ok(Long.toString(newboard.getId()));
             }
@@ -154,7 +154,7 @@ public class UserController {
                    currentUser.getboardList().add(boardtoAdd.get());                 
                    dashBoardRepository.save(boardtoAdd.get());
                    userRepository.save(currentUser);
-                   DashBoardTransactionHistory addTransaction = new DashBoardTransactionHistory(currentUser, DashBoardConstants.ADD_USER, boardtoAdd.get());
+                   DashBoardTransactionHistory addTransaction = new DashBoardTransactionHistory(userids, DashBoardConstants.ADD_USER, boardtoAdd.get());
                    dashboardTranRepository.save(addTransaction);
                    return ResponseEntity.ok("board added");
                }
@@ -190,7 +190,7 @@ public class UserController {
 
                     dashBoardRepository.save(boardtoAdd);
                     userRepository.save(currentUser);
-                    DashBoardTransactionHistory removeTransaction = new DashBoardTransactionHistory(currentUser, DashBoardConstants.REMOVE_USER,boardtoAdd);
+                    DashBoardTransactionHistory removeTransaction = new DashBoardTransactionHistory(userids, DashBoardConstants.REMOVE_USER,boardtoAdd);
                    dashboardTranRepository.save(removeTransaction);
                     return ResponseEntity.ok("board removed");
                 }

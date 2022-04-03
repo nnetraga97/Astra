@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useRef, useState,useEffect } from 'react'
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 
@@ -16,9 +16,9 @@ import UserService from '../Services/UserService';
 
 
 export default function CreateBoardPopUp(props) {
-    const { onClose, selectedValue, open } = props;
+    const { onClose, selectedValue, open,listUpdated,setlistUpdated} = props;
     const[userId,setuserId] = React.useState(window.sessionStorage.getItem('userId'));
-    
+    const[name,setName] = useState("Untitled");
 
 
     const handleClose = () => {
@@ -27,9 +27,13 @@ export default function CreateBoardPopUp(props) {
   const handleClickOpen = (value) => {
     //call user service
         console.log(value);
-        UserService.createBoard(userId, value).then((res)=>{
+        if(value===null){
+        console.log("undefined text");
+        return;}
+        UserService.createBoard(userId, name).then((res)=>{
           let data = String(res.data);
-          if(data===null){
+          if(data===null||value===undefined){
+            
             return;
           }
           else{
@@ -41,7 +45,7 @@ export default function CreateBoardPopUp(props) {
             }
             else{
                 console.log(data);
-                // setlistUpdated(true);
+                 setlistUpdated(true);
             }
           }
         });
@@ -62,12 +66,12 @@ export default function CreateBoardPopUp(props) {
             type="text"
             fullWidth
             variant="standard"
-          
+            onChange={(value)=>{setName(value)}}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={()=>handleClickOpen()}>Create!</Button>
+          <Button onClick={handleClickOpen()}>Create!</Button>
         </DialogActions>
     </Dialog>
   );
